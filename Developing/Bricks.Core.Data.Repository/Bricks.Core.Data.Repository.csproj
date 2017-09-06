@@ -96,6 +96,7 @@
     <Compile Include="Mapping\SystemMapping\MassageMapping.cs" />
     <Compile Include="Mapping\SystemMapping\MenuMapping.cs" />
     <Compile Include="Mapping\SystemMapping\MenuMappingButtonMapping.cs" />
+    <Compile Include="Mapping\SystemMapping\OrgMapping.cs" />
     <Compile Include="Mapping\SystemMapping\RoleMapping.cs" />
     <Compile Include="Mapping\SystemMapping\RoleMappingButtonMapping.cs" />
     <Compile Include="Mapping\SystemMapping\SystemInfoMapping.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Repositories\SystemRepositories\MenuAndBtnRepository.cs" />
     <Compile Include="Repositories\SystemRepositories\MenuRepository.cs" />
     <Compile Include="Repositories\SystemRepositories\MessageRepository.cs" />
+    <Compile Include="Repositories\SystemRepositories\OrgRepository.cs" />
     <Compile Include="Repositories\SystemRepositories\RoleAndBtnRepository.cs" />
     <Compile Include="Repositories\SystemRepositories\RoleRepository.cs" />
     <Compile Include="Repositories\SystemRepositories\SystemInfoRepository.cs" />

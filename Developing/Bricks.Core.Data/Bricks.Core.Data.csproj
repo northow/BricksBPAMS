@@ -85,6 +85,7 @@
     <Compile Include="Entity\SystemEntity\Message.cs" />
     <Compile Include="Entity\SystemEntity\Menu.cs" />
     <Compile Include="Entity\SystemEntity\MenuMappingButton.cs" />
+    <Compile Include="Entity\SystemEntity\Org.cs" />
     <Compile Include="Entity\SystemEntity\RoleMappingButton.cs" />
     <Compile Include="Entity\SystemEntity\Test.cs" />
     <Compile Include="Entity\SystemEntity\UserMappingMessage.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="IRepositories\ISystemRepositories\IDictionaryRepository.cs" />
     <Compile Include="IRepositories\ISystemRepositories\IMenuAndBtnRepository.cs" />
     <Compile Include="IRepositories\ISystemRepositories\IMessageRepository.cs" />
+    <Compile Include="IRepositories\ISystemRepositories\IOrgRepository.cs" />
     <Compile Include="IRepositories\ISystemRepositories\IRoleAndBtnRepository.cs" />
     <Compile Include="Entity\ResultEntity.cs" />
     <Compile Include="Entity\SystemEntity\Role.cs" />
