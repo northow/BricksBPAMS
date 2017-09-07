@@ -188,6 +188,7 @@
     <Compile Include="Common\RegisterModule.cs" />
     <Compile Include="Controllers\MainController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
+    <Compile Include="Controllers\OrgController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -667,6 +668,7 @@
     <Content Include="Scripts\datetimepicker\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Scripts\datetimepicker\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Scripts\datetimepicker\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Views\Org\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
