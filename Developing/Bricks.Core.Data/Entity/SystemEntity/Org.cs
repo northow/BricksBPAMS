@@ -9,7 +9,7 @@ namespace Bricks.Core.Data.Entity.SystemEntity
     /// <summary>
     /// 机构信息
     /// </summary>
-    public class Org
+    public class Org : BaseEntity
     {
         /// <summary>
         /// 标识ID

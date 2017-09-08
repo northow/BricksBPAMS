@@ -84,6 +84,8 @@ namespace BricksBPAMSFrame.Common
 
         public IUserAndMessageRepository UserAndMeServer { get; set; }
 
+        public IOrgRepository OrgRepository { get; set; }
+
         #endregion
 
         #region coreService

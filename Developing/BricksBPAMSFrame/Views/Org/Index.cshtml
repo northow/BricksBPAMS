@@ -1,17 +1,229 @@
-﻿
-@{
+﻿@{
+    //这里必须设置为null 因为我们前台没有用MVC的模板页 而是用的标签展示
     Layout = null;
 }
+@* 每个展示页面都要加入下面的引用文件 本人把所有JS Css 都用 App_Start->BundleConfig 捆绑生成 MVC特性  *@
+@Styles.Render("~/Scripts/bootstrap/css/1", "~/Scripts/datatables/css/1", "~/Content/1", "~/Scripts/alertjs/themes/1", "~/Scripts/select2/css/1", "~/Scripts/iconpicker/css/1", "~/Scripts/fancyTree/skin-win7/1", "~/Scripts/fileUpload/1")
+@Scripts.Render("~/bundles/js")
+<script type="text/javascript">
+    $(function () {
+        /*初始化表格配置 本插件为DataTable 具体配置看官网
+          这里楼主进行了二次封装为了简化配置，具体可以看 Scripts -> js ->myJavaScript.js*/
+        var table = $('#MyTable').custromTable({
+            ajax: {
+                url: "/Org/GetList",
+                data: function (d) {
+                    //此处传查询参数
+                    d.OrgCode = $("#orgCode").val();
+                    d.OrgName = $("#orgName").val();
+                    return JSON.stringify(d);
+                }
+            },
+            columns: [
+                { data: 'ID', visible: false },
+                { data: 'OrgCode', title: "机构编码" },
+                { data: 'OrgName', title: "机构名称" },
+                //{ data: 'AreaString', title: "地区" },
+                {
+                    data: 'AreaID', title: "地区", render: function (data, type, row, meta) {
+                        var result = "";
+                        var cc = $("#json").val();
+                        var bmobj = eval(cc);
+                        $.each(bmobj, function (i, v) {
+                            if (v.ID == data) {
+                                result = v.DicValue;
+                                return;
+                            }
+                        })
+                        return result;
+                    }
+                },
+                {
+                    data: 'IsEnabled', title: "启用", render: function (data, type, row, meta) {
+                        return "<img src='../Images/" + data + ".png' >"
+                    }
+                },
+                { data: 'CreateTime', title: "创建时间" },
+                { data: 'Remark', title: "备注" }
+            ]
+        });
 
-<!DOCTYPE html>
+        //新增按钮操作
+        $("#orgCreate").click(function () {
+            openCreateLayer();
+        });
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
-    <div> 
+        //弹出创建层
+        var openCreateLayer = function () {
+            mainLayer = parent.layer.open({
+                type: 1,
+                title: "新增机构",
+                area: ['550px', '380px'],
+                closeBtn: 1,
+                shadeClose: false,
+                skin: 'layerStyle',
+                content: $("#addLayer").html(),
+                btn: [dditConfig.btn.close, dditConfig.btn.comfrie],
+                yes: function (index, layero) {
+                    confrimBtn(index);
+                },
+                success: function (i, l) {
+                    parent.$("#myForm").FromEvent(function () {
+                        //部门初始化
+                        $("#Area").select2({
+                            minimumResultsForSearch: -1,
+                            tags: "true",
+                            placeholder: "选择地区",
+                            allowClear: true,
+                        }).val(null).trigger("change");
+
+                        //验证表单
+                        $("#myForm").validate({
+                            rules: {
+                                OrgCode: {
+                                    required: true,
+                                    remote: {
+                                        url: "/Org/ValidOrgCode",     //后台处理程序
+                                        type: "get",                   //数据发送方式
+                                        dataType: "json",              //接受数据格式
+                                        data: {                        //要传递的数据
+                                            UserID: function () {
+                                                return $("#ID").val();
+                                            }
+                                        }
+                                    }
+                                },
+                                OrgName: {
+                                    required: true
+                                },
+                                DepartmentID: {
+                                    required: true
+                                }
+                            },
+                            messages: {
+                                OrgCode: {
+                                    required: "必填",
+                                    remote: "该机构编码已存在！"
+                                },
+                                OrgName: {
+                                    required: "不能为空"
+                                },
+                                DepartmentID: {
+                                    required: "不能为空"
+                                }
+                            },
+                            highlight: function (element) {
+                                $(element).closest('.form-group').addClass('has-error');
+                            },
+                            success: function (label) {
+                                label.closest('.form-group').removeClass('has-error');
+                                label.remove();
+                            }
+                        })
+                    })
+                }
+            });
+        }
+
+        //新增或修改确认按钮
+        var confrimBtn = function (index) {
+            var id = parent.$("#ID").val();
+            var myForm = parent.$("#myForm");
+            if (myForm.valid()) {
+                var loading = parent.layer.load(2);
+                myForm.ajaxSubmit({
+                    dataType: "json",
+                    success: function (data) {
+                        parent.layer.close(loading);
+                        if (data.result) {
+                            parent.layer.close(index); //隐藏弹出
+                            table.ajax.reload(null, id == "" ? true : false);
+                            alertify.success("操作成功！"); //弹出消息日志
+                        } else {
+                            alertify.error(data.message);
+                        }
+                    },
+                    error: function (data) {
+                        parent.layer.close(loading);
+                        var obj = eval('(' + data.responseText + ')');
+                        alertify.error(obj.message);
+                    }
+                });
+            }
+        }
+
+        //查询按钮
+        $("#myQuery").click(function () {
+            table.ajax.reload();
+        })
+    })
+</script>
+<div class="margin w100f xoverhide">
+    @Html.Hidden("json", (ViewBag.jsonArea) as string)
+    <div class="panel panel-default" style="margin-top: 10px">
+        <ul class="list-group">
+            @Html.Action("CreateButtonByMuen", "Button", new { menuId = 48, mark = "org" })
+            <li class="list-group-item">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label for="orgCode">机构编码</label>
+                        <input type="text" class="form-control" name="orgCode" id="orgCode" placeholder="852001">
+                    </div>
+                    <div class="form-group">
+                        <label for="orgName">机构名称</label>
+                        <input type="text" class="form-control" name="orgName" id="orgName" placeholder="香港建心">
+                    </div>
+                    <button type="button" class="btn btn-info " id="myQuery">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查询
+                    </button>
+                </form>
+            </li>
+        </ul>
     </div>
-</body>
-</html>
+    <table id="MyTable" class="table table-bordered table-striped w100f" cellspacing="0"></table>
+</div>
+
+<div id="addLayer" class="displayn">
+    <form class="form-horizontal formPadding" id="myForm" method="post" action="/Org/AddOrEdit">
+        @Html.Hidden("ID")
+        <div class="form-group">
+            <label for="OrgCode" class="col-sm-2 control-label labsty">机构编码<span style="color:red">*</span></label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" maxlength="50" name="OrgCode" id="OrgCode" placeholder="机构编码">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="OrgName" class="col-sm-2 control-label labsty">机构名称<span style="color:red">*</span></label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="OrgName" maxlength="50" id="OrgName" placeholder="机构名称">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Area" class="col-sm-2 control-label labsty">地区<span style="color:red">*</span></label>
+            <div class="col-sm-6">
+                <select name="AreaID" id="Area" class="form-control" style="width:255px">
+                    @foreach (var item in ViewBag.area as List<Bricks.Core.Data.Entity.SystemEntity.Dictionary>)
+                    {
+                        <option value="@item.ID">@item.DicValue</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Remark" class="col-sm-2 control-label labsty">备注&nbsp;&nbsp;</label>
+            <div class="col-sm-10 pad-r20">
+                <input type="text" class="form-control" name="Remark" maxlength="2000" id="Remark">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="IsEnabled" class="col-sm-2 control-label labsty"></label>
+            <div class="col-sm-10 pad-r20">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="IsEnabled" checked="checked" id="IsEnabled" /> 启用
+                    </label>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
