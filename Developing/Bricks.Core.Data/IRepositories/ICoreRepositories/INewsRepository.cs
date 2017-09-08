@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Bricks.Core.Data.IRepositories.ICoreRepositories
 {
-   public interface INewsRepository
+    public interface INewsRepository
     {
-       Tuple<int, List<News>> GetNewsList(News model);
+        Tuple<int, List<News>> GetNewsList(News model);
     }
 }

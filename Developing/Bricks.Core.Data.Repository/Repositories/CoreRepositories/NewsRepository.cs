@@ -17,8 +17,8 @@ namespace Bricks.Core.Data.Repository.Repositories.CoreRepositories
 
         public Tuple<int, List<News>> GetNewsList(News model)
         {
-            using(var dal=BaseInfo._container.Resolve<UnitOfWork>()){
-
+            using (var dal = BaseInfo._container.Resolve<UnitOfWork>())
+            {
                 var newsRepository = dal.GetRepository<News>();
                 var conditions = ExpandHelper.True<News>();
                 if (!string.IsNullOrEmpty(model.NewTitle))
