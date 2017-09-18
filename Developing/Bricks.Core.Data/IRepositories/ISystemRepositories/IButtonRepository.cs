@@ -21,5 +21,6 @@ namespace Bricks.Core.Data.IRepositories.ISystemRepositories
 
        Button GetSingleBtnbyID(int id);
 
+       List<Button> GetBtnByMenuId(int menuId);
     }
 }

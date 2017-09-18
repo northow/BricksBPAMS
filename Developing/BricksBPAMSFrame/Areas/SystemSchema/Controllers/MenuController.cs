@@ -18,13 +18,14 @@ namespace BricksBPAMSFrame.Areas.SystemSchema.Controllers
 
         public ActionResult Index()
         {
-            ViewBag.Button=this.ButtonRepository.GetButtonList();
+            ViewBag.Button = this.ButtonRepository.GetButtonList();
             return View();
         }
 
-        public ActionResult ParentMenu() {
+        public ActionResult ParentMenu()
+        {
 
-            var pm= this.MenuRepository.GetParentMenu();
+            var pm = this.MenuRepository.GetParentMenu();
 
             var pmjson = SerializeObject(pm);
 
@@ -32,11 +33,21 @@ namespace BricksBPAMSFrame.Areas.SystemSchema.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetMenuList(Menu Menumodel) {
+        public ActionResult GetMenuList(Menu Menumodel)
+        {
 
             var menulist = this.MenuRepository.GetMenuList(Menumodel);
 
-            return JsonResult<MenuDo>(menulist); 
+            return JsonResult<MenuDo>(menulist);
+        }
+
+        [HttpPost]
+        public ActionResult GetMenuBtnById(int menuId)
+        {
+
+            var menuBtnList = this.ButtonRepository.GetBtnByMenuId(menuId);
+
+            return JsonResult(menuBtnList);
         }
 
         [HttpPost]
@@ -48,17 +59,19 @@ namespace BricksBPAMSFrame.Areas.SystemSchema.Controllers
             {
                 this.MenuRepository.AddMenu(menuModel);
             }
-            else {
+            else
+            {
                 this.MenuRepository.ModifyMenu(menuModel);
             }
 
-            return Json(new ResultEntity() { result=true});
+            return Json(new ResultEntity() { result = true });
         }
 
         [HttpPost]
-        public ActionResult RemoveMenu(int menuID) {
+        public ActionResult RemoveMenu(int menuID)
+        {
             this.MenuRepository.DeleteMenu(menuID);
-            return Json(new ResultEntity() { result = true,message="信息删除成功！" });
+            return Json(new ResultEntity() { result = true, message = "信息删除成功！" });
         }
 
     }

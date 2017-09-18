@@ -13,7 +13,7 @@ namespace Bricks.Core.Data.Repository.Mapping.SystemMapping
        public MassageMapping() {
 
            HasKey(k => k.MessageID);
-           ToTable("MESSAGE", "Base");
+           ToTable("MESSAGE", "BASE");
 
            this.Property(a => a.MessageID).HasColumnName("MESSAGEID");
            this.Property(a => a.MessageTitle).HasColumnName("MESSAGETITLE");

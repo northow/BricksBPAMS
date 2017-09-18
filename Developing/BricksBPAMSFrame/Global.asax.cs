@@ -21,14 +21,11 @@ using System.Web.Compilation;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Core.Mapping;
 using System.Data.Entity.Core.Metadata.Edm;
-
+using System.Net.Http;
 
 
 namespace BricksBPAMSFrame
 {
-    // 注意: 有关启用 IIS6 或 IIS7 经典模式的说明，
-    // 请访问 http://go.microsoft.com/?LinkId=9394801
-
     public class MvcApplication : System.Web.HttpApplication
     {
         protected void Application_Start()
@@ -52,7 +49,7 @@ namespace BricksBPAMSFrame
 
             //注册服务，所有IxxxxRepository=>xxxxRepository
             builder.RegisterAssemblyTypes(assemblys).Where(t => t.Name.EndsWith("Repository") && !t.Name.StartsWith("I")).AsImplementedInterfaces();
-          
+
             var container = builder.Build();
 
             BaseInfo._container = container;
@@ -80,7 +77,8 @@ namespace BricksBPAMSFrame
                         .SerializerSettings
                         .ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 
-            //EF预热，手动在内存中加载mapping view
+            // EF预热，手动在内存中加载mapping view,调试如果觉得启动慢可以注释这段代码，发布程序很有用
+
             using (var unitofwork = container.Resolve<UnitOfWork>())
             {
                 var objectContext = ((IObjectContextAdapter)unitofwork.context).ObjectContext;
@@ -101,6 +99,6 @@ namespace BricksBPAMSFrame
         {
             MiniProfiler.Stop();
         }
-        
+
     }
 }

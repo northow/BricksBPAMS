@@ -134,5 +134,14 @@ namespace BricksBPAMSFrame.Areas.SystemSchema.Controllers
             return Json(new ResultEntity() { result = true });
         }
 
+        [HttpPost]
+        public ActionResult GetUserInfos()
+        {
+
+            var cc = this.UserRepository.GetUserInfos();
+
+            return Json(cc);
+        }
+
     }
 }

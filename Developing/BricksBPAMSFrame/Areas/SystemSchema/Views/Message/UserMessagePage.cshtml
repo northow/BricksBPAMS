@@ -2,19 +2,17 @@
     Layout = null;
 }
 
-
-@Styles.Render("~/Scripts/bootstrap/css/1", "~/Scripts/summernote/1", "~/Scripts/datatables/css/1", "~/Content/1", "~/Scripts/alertjs/themes/1", "~/Scripts/select2/css/1", "~/Scripts/iconpicker/css/1", "~/Scripts/fancyTree/skin-win7/1", "~/Scripts/fileUpload/1")
+@Styles.Render("~/Scripts", "~/Content")
 @Scripts.Render("~/bundles/js")
-
 <style type="text/css">
     .dataTables_scrollHead {
-      display:none;
+        display: none;
     }
+
     .thsty {
         border-right: 0 !important;
     }
 </style>
-
 <script type="text/javascript">
     $(function () {
         var message = $('#messageTable').custromTable({
@@ -24,7 +22,7 @@
                     return JSON.stringify(d);
                 }
             },
-            columnsClick:false,
+            columnsClick: false,
             isNo: false,
             scrollY: 500,
             pageLength: 5,
@@ -105,17 +103,12 @@
 
     });
 </script>
-
 <div style="width:1000px;margin:20px auto;">
-
-<h3 style="height: 35px; border-bottom: 2px solid #d13030;margin-bottom:10px">
-    我的消息
-</h3>
-
-<table id="messageTable" style="border-left:0;border-right:0;overflow:hidden" class="table table-bordered table-striped w100f" cellspacing="0"></table>
-
+    <h3 style="height: 35px; border-bottom: 2px solid #d13030;margin-bottom:10px">
+        我的消息
+    </h3>
+    <table id="messageTable" style="border-left:0;border-right:0;overflow:hidden" class="table table-bordered table-striped w100f" cellspacing="0"></table>
 </div>
-
 <div id="browseMes" class="displayn">
     <div id="mainDiv" style="width:100%">
         <h3 style="text-align:center;padding:10px" id="mesTitle"></h3>

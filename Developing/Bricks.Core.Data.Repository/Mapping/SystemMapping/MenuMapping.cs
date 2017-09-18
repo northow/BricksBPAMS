@@ -15,7 +15,7 @@ namespace Bricks.Core.Data.Repository.Mapping.SystemMapping
 
             HasKey(a=>a.MenuID);
 
-            this.ToTable("MENU", "Base");
+            this.ToTable("MENU", "BASE");
 
             this.Property(a => a.MenuID).HasColumnName("MENU_ID");
             this.Property(a => a.MenuName).HasColumnName("MENU_NAME");

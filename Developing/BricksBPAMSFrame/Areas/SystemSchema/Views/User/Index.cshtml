@@ -6,9 +6,8 @@
 @using Bricks.Core.Data.Entity.SystemEntity;
 @using BricksBPAMSFrame.Common;
 
-@Styles.Render("~/Scripts/bootstrap/css/1","~/Scripts/summernote/1", "~/Scripts/datatables/css/1", "~/Content/1", "~/Scripts/alertjs/themes/1", "~/Scripts/select2/css/1", "~/Scripts/iconpicker/css/1", "~/Scripts/fancyTree/skin-win7/1", "~/Scripts/fileUpload/1")
+@Styles.Render("~/Scripts", "~/Content")
 @Scripts.Render("~/bundles/js")
-
 <script type="text/javascript">
     $(function () {
         //初始化查询部门
@@ -32,11 +31,11 @@
             },
             columns: [
                 { data: 'UserID', visible: false },
-                { data: 'UserName',title:"用户名" },
+                { data: 'UserName', title: "用户名" },
                 { data: 'UserReallyname', title: "昵称" },
                 {
                     data: 'DepartmentID', title: "部门", render: function (data, type, row, meta) {
-                        var result="";
+                        var result = "";
                         var cc = $("#json").val();
                         var bmobj = eval(cc);
                         $.each(bmobj, function (i, v) {
@@ -62,7 +61,7 @@
 
         //弹出用户信息层
         var openCreateUserLayer = function () {
-            mainLayer=parent.layer.open({
+            mainLayer = parent.layer.open({
                 type: 1,
                 title: "新增用户",
                 area: ['550px', '560px'],
@@ -94,6 +93,8 @@
                             tags: "true",
                             placeholder: "选择部门",
                             allowClear: true,
+                        }).on('select2:select', function (evt) {
+                            $(this).valid();
                         }).val(null).trigger("change");
 
                         // 手机号码验证
@@ -111,7 +112,7 @@
                                     remote: {
                                         url: "/User/ValidUserNameOrMobile",     //后台处理程序
                                         type: "get",                   //数据发送方式
-                                        dataType: "json",              //接受数据格式   
+                                        dataType: "json",              //接受数据格式
                                         data: {                        //要传递的数据
                                             UserID: function () {
                                                 return $("#UserID").val();
@@ -130,9 +131,9 @@
                                     isMobile: true,
                                     remote: {
                                         url: "/User/ValidUserNameOrMobile",
-                                        type: "get",                  
-                                        dataType: "json",             
-                                        data: {                     
+                                        type: "get",
+                                        dataType: "json",
+                                        data: {
                                             UserID: function () {
                                                 return $("#UserID").val();
                                             }
@@ -162,7 +163,7 @@
                                     rangelength: "密码应该在3-10位数之间！"
                                 },
                                 MobilePhone: {
-                                    remote:"该手机号已存在！"
+                                    remote: "该手机号已存在！"
                                 },
                                 Email: {
                                     email: "请正确填写电子邮件地址"
@@ -174,13 +175,9 @@
                                     required: "不能为空"
                                 }
                             },
-                            highlight: function (element) {
-                                $(element).closest('.form-group').addClass('has-error');
-                            },
-                            success: function (label) {
-                                label.closest('.form-group').removeClass('has-error');
-                                label.remove();
-                            }
+                            errorPlacement: dditConfig.validerrorPlacement,
+                            highlight: dditConfig.validHighlight,
+                            success: dditConfig.validSuccess
                         })
                     })
                 }
@@ -189,28 +186,28 @@
 
         //弹出分配权限层
         var openDistriRoleLayer = function () {
-           distriRoleLayer = parent.layer.open({
-               type: 1,
-               title: "分配用户权限",
-               area: ['400px', '400px'],
-               closeBtn: 1,
-               shadeClose: false,
-               skin: 'layerStyle',
-               content: $("#disturRoleLayer").html(),
-               btn: [dditConfig.btn.close, dditConfig.btn.comfrie],
-               yes: function (index, layero) {
-                   distouRole(index);
-               },
-               success: function (i, l) {
-                  parent.$("#castform").FromEvent(function () {
-                      $("#roleitme a").click(function (e) {
+            distriRoleLayer = parent.layer.open({
+                type: 1,
+                title: "分配用户权限",
+                area: ['400px', '400px'],
+                closeBtn: 1,
+                shadeClose: false,
+                skin: 'layerStyle',
+                content: $("#disturRoleLayer").html(),
+                btn: [dditConfig.btn.close, dditConfig.btn.comfrie],
+                yes: function (index, layero) {
+                    distouRole(index);
+                },
+                success: function (i, l) {
+                    parent.$("#castform").FromEvent(function () {
+                        $("#roleitme a").click(function (e) {
                             var checkbox = $(this).find(":checkbox");
                             checkbox.trigger("click");
-                      });
-                  })
-               }
-           });
-       }
+                        });
+                    })
+                }
+            });
+        }
 
         //分配角色按钮
         $("#userdistributionRole").on('click', function () {
@@ -230,9 +227,9 @@
                 }
                 openDistriRoleLayer();
             } else {
-                alertify.log("请选择一条要操作的信息！");
+                parent.alertify.log("请选择一条要操作的信息！");
             }
-       });
+        });
 
         //分配角色事件
         var distouRole = function (index) {
@@ -245,7 +242,7 @@
             $.post("/User/DistributionRole", { UserId: userid, RoleIDlist: roleIDlist }, function (data) {
                 if (data.result) {
                     parent.layer.close(index);
-                    alertify.success("分配角色成功！");
+                    parent.alertify.success("分配角色成功！");
                     table.ajax.reload(null, true);
                 } else {
                     alertify.error(data.message);
@@ -257,32 +254,32 @@
         $("#userQuery").click(function () {
             table.ajax.reload();
         })
-       
+
         //新增或修改确认按钮
         var confrimBtn = function (index) {
-           var userid = parent.$("#UserID").val();
-           var userForm = parent.$("#Userform");
-           if (userForm.valid()) {
-               var loading = parent.layer.load(2);
-               userForm.ajaxSubmit({
-                   dataType: "json",
-                   success: function (data) {
-                       parent.layer.close(loading);
-                       if (data.result) {
-                           parent.layer.close(index); //隐藏弹出
-                           table.ajax.reload(null, userid == "" ? true : false);
-                           alertify.success("操作成功！"); //弹出消息日志
-                       } else {
-                           alertify.error(data.message);
-                       }
-                   },
-                   error:function(data){
-                       parent.layer.close(loading);
-                       var obj = eval('(' + data.responseText + ')');
-                       alertify.error(obj.message);
-                   }
-               });
-           }
+            var userid = parent.$("#UserID").val();
+            var userForm = parent.$("#Userform");
+            if (userForm.valid()) {
+                var loading = parent.layer.load(2);
+                userForm.ajaxSubmit({
+                    dataType: "json",
+                    success: function (data) {
+                        parent.layer.close(loading);
+                        if (data.result) {
+                            parent.layer.close(index); //隐藏弹出
+                            table.ajax.reload(null, userid == "" ? true : false);
+                            alertify.success("操作成功！"); //弹出消息日志
+                        } else {
+                            alertify.error(data.message);
+                        }
+                    },
+                    error: function (data) {
+                        parent.layer.close(loading);
+                        var obj = eval('(' + data.responseText + ')');
+                        alertify.error(obj.message);
+                    }
+                });
+            }
         }
 
         //新增按钮操作
@@ -302,7 +299,7 @@
                 parent.$("#Department").val(model[0].DepartmentID).trigger("change");
                 parent.layer.title("编辑用户", mainLayer)
                 var imgurl = "/User/GetPortrait?imgName=" + model[0].HeadPortrait;
-                if (model[0].HeadPortrait != null&&model[0].HeadPortrait !=="") {
+                if (model[0].HeadPortrait != null && model[0].HeadPortrait !== "") {
                     parent.$('#userPortrait').fileinput('refresh', {
                         initialPreview: [
                             "<img src='" + imgurl + "' class='file-preview-image' alt='头像图片' title='头像图片'>",
@@ -310,9 +307,8 @@
                         initialCaption: model[0].HeadPortrait
                     });
                 }
-            
             } else {
-                alertify.log("请选择一条操作信息！");
+                parent.alertify.log("请选择一条操作信息！");
             }
         });
 
@@ -321,18 +317,18 @@
             var cc = table.rows('.selected')
             if (cc[0].length > 0) {
                 var model = cc.data();
-                var isenable=model[0].IsEnable?"禁用":"解除禁用";
+                var isenable = model[0].IsEnable ? "禁用" : "解除禁用";
                 parent.layer.confirm("确定要" + isenable + "该信息吗！", dditConfig.hintLayer, function () {
                     $.post("/User/DisenableUser", { UserID: model[0].UserID }, function (data) {
-                            if (data.result) {
-                                table.ajax.reload(null, false);
-                                parent.layer.close(parent.layer.index);
-                                alertify.success("信息操作成功！");
-                            }
-                    }); 
+                        if (data.result) {
+                            table.ajax.reload(null, false);
+                            parent.layer.close(parent.layer.index);
+                            alertify.success("信息操作成功！");
+                        }
+                    });
                 });
             } else {
-                alertify.log("请选择一条操作信息！");  
+                alertify.log("请选择一条操作信息！");
             }
         });
 
@@ -346,7 +342,7 @@
                         if (data.result) {
                             parent.layer.close(parent.layer.index);
                             alertify.success("密码重置成功！");
-                        } 
+                        }
                     });
                 });
             } else {
@@ -355,14 +351,12 @@
 
         });
     })
-
 </script>
-
 <div class="margin w100f xoverhide">
     @Html.Hidden("json", (ViewBag.jsonbumen) as string)
     <div class="panel panel-default" style="margin-top: 10px">
-         <ul class="list-group">
-           @Html.Action("CreateButtonByMuen", "Button", new { menuId =4, mark = "user" })
+        <ul class="list-group">
+            @Html.Action("CreateButtonByMuen", "Button", new { menuId = 4, mark = "user" })
             <li class="list-group-item">
                 <form class="form-inline">
                     <div class="form-group">
@@ -378,7 +372,7 @@
                         <select name="DepartmentID" id="DepartmentID" class="form-control" style="width:150px">
                             @foreach (var item in ViewBag.bumen as List<Dictionary>)
                             {
-                                 <option value="@item.ID">@item.DicValue</option>
+                                <option value="@item.ID">@item.DicValue</option>
                             }
                         </select>
                     </div>
@@ -391,7 +385,6 @@
     </div>
     <table id="userTable" class="table table-bordered table-striped w100f" cellspacing="0"></table>
 </div>
-
 <div id="userLayer" class="displayn">
     <form class="form-horizontal formPadding" id="Userform" method="post" action="/User/AddorEditUserInfo">
         @Html.Hidden("UserID")
@@ -422,7 +415,7 @@
         <div class="form-group">
             <label for="Department" class="col-sm-2 control-label labsty">部门<span style="color:red">*</span></label>
             <div class="col-sm-6">
-                <select name="DepartmentID" id="Department" class="form-control" style="width:265px">
+                <select name="DepartmentID" id="Department" class="form-control" style="width:250px">
                     @foreach (var item in ViewBag.bumen as List<Dictionary>)
                     {
                         <option value="@item.ID">@item.DicValue</option>
@@ -433,7 +426,7 @@
         <div class="form-group">
             <label for="MobilePhone" class="col-sm-2 control-label labsty">电话号码&nbsp;&nbsp;</label>
             <div class="col-sm-10 pad-r20">
-                <input type="text" class="form-control" name="MobilePhone" maxlength="11" placeholder="可作为登录账户" >
+                <input type="text" class="form-control" name="MobilePhone" maxlength="11" placeholder="可作为登录账户">
             </div>
         </div>
         <div class="form-group">
@@ -453,11 +446,10 @@
             <div class="col-sm-10 pad-r20">
                 <input id="userPortrait" name="Portrait" type="file" class="file-loading">
             </div>
-           @Html.Hidden("HeadPortrait")
+            @Html.Hidden("HeadPortrait")
         </div>
     </form>
 </div>
-
 <div id="disturRoleLayer" class="displayn">
     <form id="castform">
         <div class="divName">
@@ -470,14 +462,13 @@
                     foreach (var item in ViewBag.role as List<Role>)
                     {
                         <a href="javascript:;" class="list-group-item" style="padding:0 15px">
-                            <div class="checkbox" >
-                                <label>
-                                    <input type="checkbox" name="@item.RoleID"> @item.RoleName
-                                </label>
+                            <div class="checkbox checkbox-success">
+                                <input type="checkbox" name="@item.RoleID">
+                                <label>@item.RoleName </label>
                             </div>
                         </a>
                     }
-               }
+                }
             </div>
         </div>
     </form>

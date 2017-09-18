@@ -24,34 +24,39 @@ namespace BricksBPAMSFrame.Areas.SystemSchema.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetRoleList(Role rolemodel) {
+        public ActionResult GetRoleList(Role rolemodel)
+        {
 
-           var listmodel= this.RoleRepository.GetRoleList(rolemodel);
+            var listmodel = this.RoleRepository.GetRoleList(rolemodel);
 
-           return JsonResult<Role>(listmodel);
+            return JsonResult<Role>(listmodel);
         }
 
         [HttpPost]
-        public ActionResult ValidRoleName(Role model) {
+        public ActionResult ValidRoleName(Role model)
+        {
             var rolemodel = RoleRepository.Validate(model);
             if (rolemodel != null)
             {
                 return Content(model.RoleID != 0 ? "true" : "false");
             }
-            else {
+            else
+            {
                 return Content("true");
-            }          
+            }
         }
 
         [HttpPost]
-        public ActionResult AddOrEditRoleInfo(Role rolemodel) {
+        public ActionResult AddOrEditRoleInfo(Role rolemodel)
+        {
 
             if (rolemodel.RoleID == 0)
             {
                 rolemodel.CreateTime = DateTime.Now;
                 this.RoleRepository.AddRole(rolemodel);
             }
-            else {
+            else
+            {
                 rolemodel.UpdateTime = DateTime.Now;
                 this.RoleRepository.ModifyRole(rolemodel);
             }
@@ -60,10 +65,13 @@ namespace BricksBPAMSFrame.Areas.SystemSchema.Controllers
         }
 
         [HttpPost]
-        public ActionResult RemoveRole(int roleID) {
+        public ActionResult RemoveRole(int roleID)
+        {
             var result = this.RoleRepository.RemoveRole(roleID);
             return Json(result);
         }
+
+
 
         [HttpPost]
         public ActionResult DistributionMenuAndButton(int RoleID, List<int> menuId, List<RoleMappingButton> modelList)

@@ -50,7 +50,7 @@ namespace Bricks.Component.Data
                 return query;
             }
         }
-   
+
         public TEntity GetByID(object id)
         {
             return dbSet.Find(id);
@@ -61,7 +61,8 @@ namespace Bricks.Component.Data
             dbSet.Add(entity);
         }
 
-        public void Insert(IEnumerable<TEntity> entityL) {
+        public void Insert(IEnumerable<TEntity> entityL)
+        {
             try
             {
                 context.Configuration.AutoDetectChangesEnabled = false;
@@ -92,10 +93,11 @@ namespace Bricks.Component.Data
                     Delete(objid);
                 }
             }
-            finally {
+            finally
+            {
                 context.Configuration.AutoDetectChangesEnabled = true;
             }
-            
+
         }
 
         public virtual void Delete(TEntity entityToDelete)
@@ -110,13 +112,19 @@ namespace Bricks.Component.Data
         public void Update(TEntity entityToUpdate)
         {
 
+
             dbSet.Attach(entityToUpdate);
             context.Entry(entityToUpdate).State = EntityState.Modified;
 
         }
 
-
-        public void UpdateSup(TEntity entity, List<string> list, bool flag=true)
+        /// <summary>
+        /// 高级修改
+        /// </summary>
+        /// <param name="entity">实体</param>
+        /// <param name="list">操作的字段名集合</param>
+        /// <param name="flag">默认是true要修改的，false不修改的</param>
+        public void UpdateSup(TEntity entity, List<string> list, bool flag = true)
         {
             dbSet.Attach(entity);
             if (flag)
@@ -128,7 +136,8 @@ namespace Bricks.Component.Data
                     stateEntry.SetModifiedProperty(item);
                 }
             }
-            else {
+            else
+            {
                 context.Entry(entity).State = EntityState.Modified;
                 Type entityClass = entity.GetType();
                 var propertys = entityClass.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
@@ -142,11 +151,11 @@ namespace Bricks.Component.Data
             }
         }
 
-        public IQueryable<TEntity> ExecuteSQLQuery<TEntity>(string sql, SqlParameter[] parmArray=null)
+        public IQueryable<TEntity> ExecuteSQLQuery<TEntity>(string sql, SqlParameter[] parmArray = null)
         {
 
-           IQueryable<TEntity> result=context.Database.SqlQuery<TEntity>(sql, parmArray).AsQueryable();
-           return result;
+            IQueryable<TEntity> result = context.Database.SqlQuery<TEntity>(sql, parmArray).AsQueryable();
+            return result;
 
         }
 

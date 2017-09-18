@@ -1,15 +1,14 @@
 ﻿@{
     Layout = null;
 }
-@Styles.Render("~/Scripts/bootstrap/css/1", "~/Scripts/datatables/css/1", "~/Content/1", "~/Scripts/alertjs/themes/1", "~/Scripts/select2/css/1", "~/Scripts/iconpicker/css/1", "~/Scripts/fancyTree/skin-win7/1", "~/Scripts/fileUpload/1")
-<link href="~/Scripts/calendar/fullcalendar.css" rel="stylesheet" />
+
+@Styles.Render("~/Scripts", "~/Content")
 @Scripts.Render("~/bundles/js")
-<script src="~/Scripts/calendar/moment.min.js"></script>
-<script src="~/Scripts/calendar/fullcalendar.js"></script>
-<script src="~/Scripts/calendar/locale/zh-cn.js"></script>
+@Scripts.Render("~/Scripts/calendar")
+
 <script type="text/javascript">
     $(function () {
-    
+
         //登录表格配置
         var logtable = $('#loginlogTable').custromTable({
             ajax: {
@@ -25,7 +24,7 @@
                 { data: 'LoginName', title: "用户名" },
                 { data: 'LoginNicker', title: "昵称" },
                 { data: 'LoginIP', title: "IP" },
-                { data: 'LoginTime', title: "登陆时间"}
+                { data: 'LoginTime', title: "登陆时间" }
             ]
         });
 
@@ -33,7 +32,7 @@
         $("#logQuery").click(function () {
             logtable.ajax.reload();
         })
-  
+
         var openlogLayer = function () {
             mainLayer = parent.layer.open({
                 type: 1,
@@ -59,9 +58,9 @@
                 openlogLayer();
                 var filep = date.format();
                 $.get("/Log/ReadyFile", { filePath: filep }, function (data) {
-                    if (data.result) 
+                    if (data.result)
                         parent.$("#fileContent").html(data.message);
-                            
+
                 })
             },
             viewRender: function (view, element) {
@@ -70,8 +69,8 @@
         });
 
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-            if($(e.target).text()=="错误日志")
-               $("#calendar").fullCalendar("render");
+            if ($(e.target).text() == "错误日志")
+                $("#calendar").fullCalendar("render");
         })
 
     });
@@ -109,9 +108,9 @@
                 <table id="loginlogTable" class="table table-bordered table-striped w100f" cellspacing="0"></table>
             </div>
         </div>
-        <div role="tabpanel" class="tab-pane" id="errorlog" >
+        <div role="tabpanel" class="tab-pane" id="errorlog">
             <div class="margin w100f xoverhide pad10 ">
-                <div id="calendar" ></div>
+                <div id="calendar"></div>
             </div>
         </div>
     </div>

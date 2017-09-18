@@ -10,9 +10,11 @@ using System.Threading.Tasks;
 
 namespace Bricks.Core.Data.IRepositories.ISystemRepositories
 {
-    public interface IUserRepository 
+    public interface IUserRepository
     {
-        Tuple<int,List<User>> GetList(User model);
+        Tuple<int, List<User>> GetList(User model);
+
+        List<User> GetUserInfos();
 
         User GetSingle(User model);
 

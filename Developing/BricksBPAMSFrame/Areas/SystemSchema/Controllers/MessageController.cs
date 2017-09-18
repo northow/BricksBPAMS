@@ -23,12 +23,11 @@ namespace BricksBPAMSFrame.Areas.SystemSchema.Controllers
             ViewBag.DepartmentUser = this.MessageServer.GetDepartmentInfo();
 
             return View();
-        } 
+        }
 
         [HttpPost]
-        public ActionResult GetMessagesInfo(Message model, string SendTime)
+        public ActionResult GetMessagesInfo([ModelBinder(typeof(CustomModelBind))]Message model)
         {
-            model.SendTime = string.IsNullOrEmpty(SendTime) ? null : (DateTime?)DateTime.Parse(SendTime);
             var result = this.MessageServer.GetMessageList(model);
             return JsonResult<MessageDo>(result);
         }
@@ -50,29 +49,30 @@ namespace BricksBPAMSFrame.Areas.SystemSchema.Controllers
             {
                 this.MessageServer.ModifyMessage(model);
             }
-            return Json(new ResultEntity() { result=true });
+            return Json(new ResultEntity() { result = true });
         }
 
         [HttpPost]
         public ActionResult GetSingle(int mesId)
-        { 
-          var message=this.MessageServer.GetMessageSingle(mesId);
-          return Json(new ResultEntity() { result = true, Data = message });
+        {
+            var message = this.MessageServer.GetMessageSingle(mesId);
+            return Json(new ResultEntity() { result = true, Data = message });
         }
-       
+
         [HttpPost]
         public ActionResult DeleteMessageInfo(int mesId)
         {
             this.MessageServer.RemoveMessage(mesId);
-            return Json(new ResultEntity() { result = true,message="消息删除成功！" });
+            return Json(new ResultEntity() { result = true, message = "消息删除成功！" });
         }
 
         [HttpPost]
-        public ActionResult GetMesByUser(bool isAll) {
+        public ActionResult GetMesByUser(bool isAll)
+        {
             var id = UserInfo.UserID;
 
-            var result = this.UserAndMeServer.GetMesByUser(id,isAll);
-            
+            var result = this.UserAndMeServer.GetMesByUser(id, isAll);
+
             return Json(result);
         }
 
@@ -94,8 +94,9 @@ namespace BricksBPAMSFrame.Areas.SystemSchema.Controllers
         }
 
         [HttpPost]
-        public ActionResult AgainSendEmail(int messageId) {
-            var mesinfo= this.MessageServer.GetMessageSingle(messageId);
+        public ActionResult AgainSendEmail(int messageId)
+        {
+            var mesinfo = this.MessageServer.GetMessageSingle(messageId);
 
             mesinfo.SendEmailState = 1;
 
@@ -106,7 +107,8 @@ namespace BricksBPAMSFrame.Areas.SystemSchema.Controllers
             return Json(new ResultEntity() { result = true });
         }
 
-        public ActionResult UserMessagePage() {
+        public ActionResult UserMessagePage()
+        {
 
             return View();
         }
@@ -134,10 +136,12 @@ namespace BricksBPAMSFrame.Areas.SystemSchema.Controllers
                     }
                     model.SendEmailState = 2;
                     this.MessageServer.SetSendState(model);
-                }catch(Exception ex){
+                }
+                catch (Exception ex)
+                {
                     new LogHelper().LogError("发送邮件异常" + ex);
                     model.SendEmailState = 3;
-                    this.MessageServer.SetSendState(model);    
+                    this.MessageServer.SetSendState(model);
                 }
             });
         }

@@ -14,7 +14,7 @@ namespace Bricks.Core.Data.Repository.Mapping.SystemMapping
        public RoleMapping() {
 
            HasKey(a => a.RoleID);
-           this.ToTable("ROLE", "Base");
+           this.ToTable("ROLE", "BASE");
            this.Property(a => a.RoleID).HasColumnName("ROLE_ID");
            this.Property(a => a.RoleName).HasColumnName("ROLE_NAME");
            this.Property(a => a.RoleDescription).HasColumnName("ROLE_DESCRIPTION");

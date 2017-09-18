@@ -16,7 +16,7 @@ namespace Bricks.Core.Data.Repository.Mapping.SystemMapping
 
             this.HasKey(a => a.UserID);
 
-            this.ToTable("USERINFOMATION", "Base");
+            this.ToTable("USERINFOMATION", "BASE");
             this.Property(a => a.UserID).HasColumnName("USER_ID");
             this.Property(a => a.UserPassword).HasColumnName("USER_PASSWORD");
             this.Property(a => a.UserName).HasColumnName("USER_NAME");

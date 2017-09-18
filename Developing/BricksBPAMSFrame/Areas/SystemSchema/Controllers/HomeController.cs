@@ -12,15 +12,16 @@ namespace BricksBPAMSFrame.Areas.SystemSchema.Controllers
 {
     public class HomeController : BaseController
     {
-            
-        public ActionResult Index()        
+
+        public ActionResult Index()
         {
             var uu = this.UserInfo;
             return View(this.UserInfo);
         }
 
         [ChildActionOnly]
-        public ActionResult MenuItem() {
+        public ActionResult MenuItem()
+        {
 
             #region 得到角色菜单
 
@@ -43,15 +44,7 @@ namespace BricksBPAMSFrame.Areas.SystemSchema.Controllers
             return PartialView(newMenu);
         }
 
-
-        [ChildActionOnly]
-        public ActionResult Main() {
-
-            return PartialView();
-        }
-
-
-        public ActionResult ControllerError(BaseEntity baseEntity=null)
+        public ActionResult ControllerError(BaseEntity baseEntity = null)
         {
             var rolelist = UserRepository.GetbyID(UserInfo.UserID).RoleList;
             var cc = baseEntity.draw;

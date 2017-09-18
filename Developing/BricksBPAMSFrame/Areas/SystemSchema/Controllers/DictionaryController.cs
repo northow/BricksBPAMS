@@ -71,5 +71,23 @@ namespace BricksBPAMSFrame.Areas.SystemSchema.Controllers
 
         }
 
+        [HttpPost]
+        public ActionResult GetDicValuebyCategoryId(int CategoryId)
+        {
+            var result = this.DicValue.GetDictionaryVules(CategoryId);
+
+            return JsonResult(result);
+        }
+
+
+        [HttpPost]
+        public ActionResult SelectBinding(DictionaryCategory model)
+        {
+
+            var result = this.DicCategory.GetDictionaryByCategory(model);
+
+            return JsonResult(result);
+        }
+
     }
 }

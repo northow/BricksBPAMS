@@ -195,5 +195,13 @@ namespace Bricks.Core.Data.Repository.Repositories.SystemRepositories
                 dal.Save();
             }
         }
+
+        public List<User> GetUserInfos()
+        {
+            using (var dal = BaseInfo._container.Resolve<UnitOfWork>())
+            {
+                return dal.GetRepository<User>().Get().ToList();
+            }
+        }
     }
 }

@@ -15,19 +15,22 @@ namespace Bricks.Core.Data.Repository.Repositories.SystemRepositories
     class MenuAndBtnRepository : IMenuAndBtnRepository
     {
 
-        public void MenuMapBtn(int MenuID,List<MenuMappingButton> mplist)
+        public void MenuMapBtn(int MenuID, List<MenuMappingButton> mplist)
         {
             using (UnitOfWork dal = BaseInfo._container.Resolve<UnitOfWork>())
             {
-               var menuRepository=dal.GetRepository<Menu>();
-               var menuBtnRepository = dal.GetRepository<MenuMappingButton>();
-               var menuModel = menuRepository.Get(filter: a => a.MenuID == MenuID, includeProperties: "mbList").FirstOrDefault();
+                var menuRepository = dal.GetRepository<Menu>();
+                var menuBtnRepository = dal.GetRepository<MenuMappingButton>();
+                var menuModel = menuRepository.Get(filter: a => a.MenuID == MenuID, includeProperties: "mbList").FirstOrDefault();
 
-               menuBtnRepository.Delete(menuModel.mbList.ToList());
+                menuBtnRepository.Delete(menuModel.mbList.ToList());
 
-               menuBtnRepository.Insert(mplist);
+                if (mplist != null && mplist.Count > 0)
+                {
+                    menuBtnRepository.Insert(mplist);
+                }
 
-               dal.Save();
+                dal.Save();
             }
         }
 
